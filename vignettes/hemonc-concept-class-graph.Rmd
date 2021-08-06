@@ -54,11 +54,14 @@ final_graph$graph %>%
 ```
 
 ```{r}
+component_graph <- 
 final_graph$graph %>%
   select_nodes(type == "Component") %>%
   trav_out() %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
+  transform_to_subgraph_ws() 
+
+render_graph(component_graph)
+create_legend(component_graph)
 ```
 
 ```{r}
