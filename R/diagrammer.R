@@ -69,211 +69,211 @@ map_node_attributes <-
 
     all_args <- formals()
 
-    # shape_from <- enquo(shape_from)
-    # return(nodes_and_edges@nodes@data %>% mutate(shape = !!shape_from))
+    # shape_from <- dplyr::enquo(shape_from)
+    # return(nodes_and_edges@nodes@data %>% dplyr::dplyr::mutate(shape = !!shape_from))
     #
 
     if (!is.null(all_args$shape_from)) {
       cli::cli_alert_info("Shape from: {all_args$shape_from}")
-      shape_from <- enquo(shape_from)
+      shape_from <- dplyr::enquo(shape_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(shape = map_to_value(!!shape_from,
+        dplyr::mutate(shape = map_to_value(!!shape_from,
                                     map_assignment = shape_map,
                                     other = shape_map_other))
     }
 
     if (!is.null(all_args$style_from)) {
       cli::cli_alert_info("Style from: {all_args$style_from}")
-      style_from <- enquo(style_from)
+      style_from <- dplyr::enquo(style_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(style = map_to_value(!!style_from,
+        dplyr::mutate(style = map_to_value(!!style_from,
                                     map_assignment = style_map,
                                     other = style_map_other))
     }
 
     if (!is.null(all_args$penwidth_from)) {
       cli::cli_alert_info("Penwidth from: {all_args$penwidth_from}")
-      penwidth_from <- enquo(penwidth_from)
+      penwidth_from <- dplyr::enquo(penwidth_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(penwidth = map_to_value(!!penwidth_from,
+        dplyr::mutate(penwidth = map_to_value(!!penwidth_from,
                                        map_assignment = penwidth_map,
                                        other = penwidth_map_other))
     }
 
     if (!is.null(all_args$color_from)) {
       cli::cli_alert_info("Color from: {all_args$color_from}")
-      color_from <- enquo(color_from)
+      color_from <- dplyr::enquo(color_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(color = map_to_value(!!color_from,
+        dplyr::mutate(color = map_to_value(!!color_from,
                                     map_assignment = color_map,
                                     other = color_map_other))
     }
 
     if (!is.null(all_args$fillcolor_from)) {
       cli::cli_alert_info("Fillcolor from: {all_args$fillcolor_from}")
-      fillcolor_from <- enquo(fillcolor_from)
+      fillcolor_from <- dplyr::enquo(fillcolor_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(fillcolor = map_to_value(!!fillcolor_from,
+        dplyr::mutate(fillcolor = map_to_value(!!fillcolor_from,
                                         map_assignment = fillcolor_map,
                                         other = fillcolor_map_other))
     }
 
     if (!is.null(all_args$image_from)) {
       cli::cli_alert_info("Image from: {all_args$image_from}")
-      image_from <- enquo(image_from)
+      image_from <- dplyr::enquo(image_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(image = map_to_value(!!image_from,
+        dplyr::mutate(image = map_to_value(!!image_from,
                                     map_assignment = image_map,
                                     other = image_map_other))
     }
 
     if (!is.null(all_args$fontcolor_from)) {
       cli::cli_alert_info("Fontcolor from: {all_args$fontcolor_from}")
-      fontcolor_from <- enquo(fontcolor_from)
+      fontcolor_from <- dplyr::enquo(fontcolor_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(fontcolor = map_to_value(!!fontcolor_from,
+        dplyr::mutate(fontcolor = map_to_value(!!fontcolor_from,
                                         map_assignment = fontcolor_map,
                                         other = fontcolor_map_other))
     }
 
     if (!is.null(all_args$peripheries_from)) {
-      peripheries_from <- enquo(peripheries_from)
+      peripheries_from <- dplyr::enquo(peripheries_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(peripheries = map_to_value(!!peripheries_from,
+        dplyr::mutate(peripheries = map_to_value(!!peripheries_from,
                                           map_assignment = peripheries_map,
                                           other = peripheries_map_other))
     }
 
     if (!is.null(all_args$x_from)) {
-      x_from <- enquo(x_from)
+      x_from <- dplyr::enquo(x_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(x = map_to_value(!!x_from,
+        dplyr::mutate(x = map_to_value(!!x_from,
                                 map_assignment = x_map,
                                 other = x_map_other))
     }
 
     if (!is.null(all_args$y_from)) {
-      y_from <- enquo(y_from)
+      y_from <- dplyr::enquo(y_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(y = map_to_value(!!y_from,
+        dplyr::mutate(y = map_to_value(!!y_from,
                                 map_assignment = y_map,
                                 other = y_map_other))
     }
 
     if (!is.null(all_args$group_from)) {
-      group_from <- enquo(group_from)
+      group_from <- dplyr::enquo(group_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(group = map_to_value(!!group_from,
+        dplyr::mutate(group = map_to_value(!!group_from,
                                     map_assignment = group_map,
                                     other = group_map_other))
     }
 
     if (!is.null(all_args$tooltip_from)) {
-      tooltip_from <- enquo(tooltip_from)
+      tooltip_from <- dplyr::enquo(tooltip_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(tooltip = map_to_value(!!tooltip_from,
+        dplyr::mutate(tooltip = map_to_value(!!tooltip_from,
                                       map_assignment = tooltip_map,
                                       other = tooltip_map_other))
     }
 
     if (!is.null(all_args$xlabel_from)) {
-      xlabel_from <- enquo(xlabel_from)
+      xlabel_from <- dplyr::enquo(xlabel_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(xlabel = map_to_value(!!xlabel_from,
+        dplyr::mutate(xlabel = map_to_value(!!xlabel_from,
                                      map_assignment = xlabel_map,
                                      other = xlabel_map_other))
     }
 
     if (!is.null(all_args$URL_from)) {
-      URL_from <- enquo(URL_from)
+      URL_from <- dplyr::enquo(URL_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(URL = map_to_value(!!URL_from,
+        dplyr::mutate(URL = map_to_value(!!URL_from,
                                   map_assignment = URL_map,
                                   other = URL_map_other))
     }
 
     if (!is.null(all_args$sides_from)) {
-      sides_from <- enquo(sides_from)
+      sides_from <- dplyr::enquo(sides_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(sides = map_to_value(!!sides_from,
+        dplyr::mutate(sides = map_to_value(!!sides_from,
                                     map_assignment = sides_map,
                                     other = sides_map_other))
     }
 
     if (!is.null(all_args$orientation_from)) {
-      orientation_from <- enquo(orientation_from)
+      orientation_from <- dplyr::enquo(orientation_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(orientation = map_to_value(!!orientation_from,
+        dplyr::mutate(orientation = map_to_value(!!orientation_from,
                                           map_assignment = orientation_map,
                                           other = orientation_map_other))
     }
 
     if (!is.null(all_args$skew_from)) {
-      skew_from <- enquo(skew_from)
+      skew_from <- dplyr::enquo(skew_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(skew = map_to_value(!!skew_from,
+        dplyr::mutate(skew = map_to_value(!!skew_from,
                                    map_assignment = skew_map,
                                    other = skew_map_other))
     }
 
     if (!is.null(all_args$distortion_from)) {
-      distortion_from <- enquo(distortion_from)
+      distortion_from <- dplyr::enquo(distortion_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(distortion = map_to_value(!!distortion_from,
+        dplyr::mutate(distortion = map_to_value(!!distortion_from,
                                          map_assignment = distortion_map,
                                          other = distortion_map_other))
     }
 
     if (!is.null(all_args$gradientangle_from)) {
-      gradientangle_from <- enquo(gradientangle_from)
+      gradientangle_from <- dplyr::enquo(gradientangle_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(gradientangle = map_to_value(!!gradientangle_from,
+        dplyr::mutate(gradientangle = map_to_value(!!gradientangle_from,
                                             map_assignment = gradientangle_map,
                                             other = gradientangle_map_other))
     }
 
     if (!is.null(all_args$fixedsize_from)) {
-      fixedsize_from <- enquo(fixedsize_from)
+      fixedsize_from <- dplyr::enquo(fixedsize_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(fixedsize = map_to_value(!!fixedsize_from,
+        dplyr::mutate(fixedsize = map_to_value(!!fixedsize_from,
                                         map_assignment = fixedsize_map,
                                         other = fixedsize_map_other))
     }
 
     if (!is.null(all_args$labelloc_from)) {
-      labelloc_from <- enquo(labelloc_from)
+      labelloc_from <- dplyr::enquo(labelloc_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(labelloc = map_to_value(!!labelloc_from,
+        dplyr::mutate(labelloc = map_to_value(!!labelloc_from,
                                        map_assignment = labelloc_map,
                                        other = labelloc_map_other))
     }
 
     if (!is.null(all_args$margin_from)) {
-      margin_from <- enquo(margin_from)
+      margin_from <- dplyr::enquo(margin_from)
       nodes_and_edges@nodes@data <-
         nodes_and_edges@nodes@data %>%
-        mutate(margin = map_to_value(!!margin_from,
+        dplyr::mutate(margin = map_to_value(!!margin_from,
                                      map_assignment = margin_map,
                                      other = margin_map_other))
     }
@@ -287,7 +287,7 @@ map_node_attributes <-
 
     constant_attrs <-
       formals()[names(formals()) %in% constant_attrs] %>%
-      keep(~!is.null(.))
+      purrr::keep(~!is.null(.))
     constant_attrs_df <-
       tibble::as_tibble(constant_attrs)
     nodes_and_edges@nodes@data <-
@@ -357,20 +357,20 @@ map_edge_attributes <-
            decorate_map = NULL) {
 
 
-    arrowhead_from <- enquo(arrowhead_from)
+    arrowhead_from <- dplyr::enquo(arrowhead_from)
     nodes_and_edges@edges@data <-
       nodes_and_edges@edges@data %>%
-      mutate(arrowhead = map_to_value(!!arrowhead_from,
+      dplyr::mutate(arrowhead = map_to_value(!!arrowhead_from,
                                       map_assignment = arrowhead_map))
 
-    label_from <- enquo(label_from)
+    label_from <- dplyr::enquo(label_from)
     nodes_and_edges@edges@data <-
       nodes_and_edges@edges@data %>%
-      mutate(rel = relationship_id,
+      dplyr::mutate(rel = relationship_id,
              label = !!label_from,
              fontsize = fontsize,
              len = len) %>%
-      distinct()
+      dplyr::distinct()
 
     nodes_and_edges
 
@@ -380,7 +380,6 @@ construct_graph <-
   function(nodes_and_edges,
            attr_theme = "lr") {
 
-    require(DiagrammeR)
 
     attrs <-
       colnames(nodes_and_edges@nodes@data)[!(colnames(nodes_and_edges@nodes@data) %in%
@@ -389,9 +388,9 @@ construct_graph <-
       eval(
       rlang::parse_expr(
       c(
-      "create_node_df(\n",
+      "DiagrammeR::create_node_df(\n",
       "   n = nrow(nodes_and_edges@nodes@data),\n",
-       paste(glue("  {attrs} = nodes_and_edges@nodes@data${attrs}"),
+       paste(glue::glue("  {attrs} = nodes_and_edges@nodes@data${attrs}"),
              collapse = ",\n"),
       "\n)") %>%
         paste(collapse = ""))
@@ -399,16 +398,6 @@ construct_graph <-
 
     omop_ndf$id <- nodes_and_edges@nodes@data$id
 
-    # omop_edf <-
-    #   create_edge_df(
-    #     from = nodes_and_edges@edges@data$from,
-    #     to = nodes_and_edges@edges@data$to,
-    #     rel = nodes_and_edges@edges@data$rel,
-    #     label = nodes_and_edges@edges@data$label,
-    #     arrowhead = nodes_and_edges@edges@data$arrowhead,
-    #     len = nodes_and_edges@edges@data$len,
-    #     fontsize = nodes_and_edges@edges@data$fontsize
-    #   )
 
     attrs <-
       colnames(nodes_and_edges@edges@data)
@@ -417,15 +406,15 @@ construct_graph <-
       eval(
         rlang::parse_expr(
           c(
-            "create_edge_df(\n",
-            paste(glue("  {attrs} = nodes_and_edges@edges@data${attrs}"),
+            "DiagrammeR::create_edge_df(\n",
+            paste(glue::glue("  {attrs} = nodes_and_edges@edges@data${attrs}"),
                   collapse = ",\n"),
             "\n)") %>%
             paste(collapse = ""))
       )
 
     final_graph <-
-      create_graph(
+      DiagrammeR::create_graph(
         nodes_df = omop_ndf,
         edges_df = omop_edf,
         attr_theme = attr_theme

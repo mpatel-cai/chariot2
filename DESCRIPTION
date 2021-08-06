@@ -14,12 +14,17 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports:
-  chariot
-  glue
-  cli
-  tidyverse
+    chariot,
+    glue,
+    cli,
+    dplyr,
+    tidyr,
+    magrittr,
+    DiagrammeR,
+    rlang
 Remotes:
-  meerapatelmd/chariot
+  meerapatelmd/chariot,
+  rich-iannone/DiagrammeR
 URL: https://github.com/mpatel-cai/chariot2
 BugReports: https://github.com/mpatel-cai/chariot2/issues
 Suggests: 
