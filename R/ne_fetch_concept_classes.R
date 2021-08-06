@@ -1,3 +1,31 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param conn PARAM_DESCRIPTION
+#' @param conn_fun PARAM_DESCRIPTION
+#' @param type_from PARAM_DESCRIPTION, Default: concept_class_id
+#' @param label_glue PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[pg13]{query}}
+#'  \code{\link[R.cache]{loadCache}},\code{\link[R.cache]{saveCache}}
+#'  \code{\link[cli]{cli_progress_bar}}
+#'  \code{\link[tidyr]{extract}}
+#'  \code{\link[glue]{glue}}
+#' @rdname ne_fetch_concept_classes
+#' @export
+#' @importFrom pg13 query
+#' @importFrom R.cache loadCache saveCache
+#' @importFrom cli cli_progress_bar cli_progress_update
+#' @importFrom tidyr extract
+#' @importFrom glue glue
+
 ne_fetch_concept_classes <-
   function(conn,
            conn_fun,

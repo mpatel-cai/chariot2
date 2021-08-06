@@ -1,7 +1,80 @@
-library(tidyverse)
-library(chariot)
-library(glue)
-
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param nodes_and_edges PARAM_DESCRIPTION
+#' @param fontsize PARAM_DESCRIPTION, Default: 12
+#' @param fontname PARAM_DESCRIPTION, Default: NULL
+#' @param width PARAM_DESCRIPTION, Default: 1.5
+#' @param height PARAM_DESCRIPTION, Default: 1.5
+#' @param shape_from PARAM_DESCRIPTION, Default: standard_concept
+#' @param shape_map PARAM_DESCRIPTION, Default: c(C = "square", S = "circle", `NA` = "circle")
+#' @param shape_map_other PARAM_DESCRIPTION, Default: 'circle'
+#' @param style_from PARAM_DESCRIPTION, Default: standard_concept
+#' @param style_map PARAM_DESCRIPTION, Default: c(C = "filled", S = "filled", `NA` = "filled")
+#' @param style_map_other PARAM_DESCRIPTION, Default: NULL
+#' @param penwidth_from PARAM_DESCRIPTION, Default: NULL
+#' @param penwidth_map PARAM_DESCRIPTION, Default: NULL
+#' @param color_from PARAM_DESCRIPTION, Default: vocabulary_id
+#' @param color_map PARAM_DESCRIPTION, Default: vocabulary_id_standard_colors
+#' @param color_map_other PARAM_DESCRIPTION, Default: 'gray20'
+#' @param fillcolor_from PARAM_DESCRIPTION, Default: vocabulary_id
+#' @param fillcolor_map PARAM_DESCRIPTION, Default: vocabulary_id_standard_colors
+#' @param fillcolor_map_other PARAM_DESCRIPTION, Default: 'gray20'
+#' @param image_from PARAM_DESCRIPTION, Default: NULL
+#' @param image_map PARAM_DESCRIPTION, Default: NULL
+#' @param fontname_from PARAM_DESCRIPTION, Default: NULL
+#' @param fontname_map PARAM_DESCRIPTION, Default: NULL
+#' @param fontcolor_from PARAM_DESCRIPTION, Default: standard_concept
+#' @param fontcolor_map PARAM_DESCRIPTION, Default: c(C = "black", S = "black", `NA` = "gray40")
+#' @param fontcolor_map_other PARAM_DESCRIPTION, Default: NULL
+#' @param peripheries_from PARAM_DESCRIPTION, Default: NULL
+#' @param peripheries_map PARAM_DESCRIPTION, Default: NULL
+#' @param x_from PARAM_DESCRIPTION, Default: NULL
+#' @param x_map PARAM_DESCRIPTION, Default: NULL
+#' @param y_from PARAM_DESCRIPTION, Default: NULL
+#' @param y_map PARAM_DESCRIPTION, Default: NULL
+#' @param group_from PARAM_DESCRIPTION, Default: NULL
+#' @param group_map PARAM_DESCRIPTION, Default: NULL
+#' @param tooltip_from PARAM_DESCRIPTION, Default: NULL
+#' @param tooltip_map PARAM_DESCRIPTION, Default: NULL
+#' @param xlabel_from PARAM_DESCRIPTION, Default: NULL
+#' @param xlabel_map PARAM_DESCRIPTION, Default: NULL
+#' @param URL_from PARAM_DESCRIPTION, Default: NULL
+#' @param URL_map PARAM_DESCRIPTION, Default: NULL
+#' @param sides_from PARAM_DESCRIPTION, Default: NULL
+#' @param sides_map PARAM_DESCRIPTION, Default: NULL
+#' @param orientation_from PARAM_DESCRIPTION, Default: NULL
+#' @param orientation_map PARAM_DESCRIPTION, Default: NULL
+#' @param skew_from PARAM_DESCRIPTION, Default: NULL
+#' @param skew_map PARAM_DESCRIPTION, Default: NULL
+#' @param distortion_from PARAM_DESCRIPTION, Default: NULL
+#' @param distortion_map PARAM_DESCRIPTION, Default: NULL
+#' @param gradientangle_from PARAM_DESCRIPTION, Default: NULL
+#' @param gradientangle_map PARAM_DESCRIPTION, Default: NULL
+#' @param fixedsize_from PARAM_DESCRIPTION, Default: NULL
+#' @param fixedsize_map PARAM_DESCRIPTION, Default: NULL
+#' @param labelloc_from PARAM_DESCRIPTION, Default: NULL
+#' @param labelloc_map PARAM_DESCRIPTION, Default: NULL
+#' @param margin_from PARAM_DESCRIPTION, Default: NULL
+#' @param margin_map PARAM_DESCRIPTION, Default: NULL
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[cli]{cli_alert}}
+#'  \code{\link[dplyr]{tidyeval-compat}},\code{\link[dplyr]{mutate}}
+#'  \code{\link[purrr]{keep}}
+#'  \code{\link[tibble]{as_tibble}}
+#' @rdname map_node_attributes
+#' @export 
+#' @importFrom cli cli_alert_info
+#' @importFrom dplyr enquo mutate
+#' @importFrom purrr keep
+#' @importFrom tibble as_tibble
 map_node_attributes <-
   function(nodes_and_edges,
            fontsize = 12,
@@ -299,6 +372,75 @@ map_node_attributes <-
   }
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param nodes_and_edges PARAM_DESCRIPTION
+#' @param fontsize PARAM_DESCRIPTION, Default: 12
+#' @param len PARAM_DESCRIPTION, Default: 1
+#' @param label_from PARAM_DESCRIPTION, Default: relationship_name
+#' @param style_from PARAM_DESCRIPTION, Default: NULL
+#' @param style_map PARAM_DESCRIPTION, Default: NULL
+#' @param penwidth_from PARAM_DESCRIPTION, Default: NULL
+#' @param penwidth_map PARAM_DESCRIPTION, Default: NULL
+#' @param color_from PARAM_DESCRIPTION, Default: NULL
+#' @param color_map PARAM_DESCRIPTION, Default: NULL
+#' @param arrowsize_from PARAM_DESCRIPTION, Default: NULL
+#' @param arrowsize_map PARAM_DESCRIPTION, Default: NULL
+#' @param arrowhead_from PARAM_DESCRIPTION, Default: is_hierarchical
+#' @param arrowhead_map PARAM_DESCRIPTION, Default: c(`1` = "vee", `0` = "none")
+#' @param arrowtail_from PARAM_DESCRIPTION, Default: NULL
+#' @param arrowtail_map PARAM_DESCRIPTION, Default: NULL
+#' @param fontname_from PARAM_DESCRIPTION, Default: NULL
+#' @param fontname_map PARAM_DESCRIPTION, Default: NULL
+#' @param fontsize_from PARAM_DESCRIPTION, Default: NULL
+#' @param fontsize_map PARAM_DESCRIPTION, Default: NULL
+#' @param fontcolor_from PARAM_DESCRIPTION, Default: NULL
+#' @param fontcolor_map PARAM_DESCRIPTION, Default: NULL
+#' @param tooltip_from PARAM_DESCRIPTION, Default: NULL
+#' @param tooltip_map PARAM_DESCRIPTION, Default: NULL
+#' @param URL_from PARAM_DESCRIPTION, Default: NULL
+#' @param URL_map PARAM_DESCRIPTION, Default: NULL
+#' @param edgetooltip_from PARAM_DESCRIPTION, Default: NULL
+#' @param edgetooltip_map PARAM_DESCRIPTION, Default: NULL
+#' @param edgeURL_from PARAM_DESCRIPTION, Default: NULL
+#' @param edgeURL_map PARAM_DESCRIPTION, Default: NULL
+#' @param dir_from PARAM_DESCRIPTION, Default: NULL
+#' @param dir_map PARAM_DESCRIPTION, Default: NULL
+#' @param headtooltip_from PARAM_DESCRIPTION, Default: NULL
+#' @param headtooltip_map PARAM_DESCRIPTION, Default: NULL
+#' @param headURL_from PARAM_DESCRIPTION, Default: NULL
+#' @param headURL_map PARAM_DESCRIPTION, Default: NULL
+#' @param headclip_from PARAM_DESCRIPTION, Default: NULL
+#' @param headclip_map PARAM_DESCRIPTION, Default: NULL
+#' @param headlabel_from PARAM_DESCRIPTION, Default: NULL
+#' @param headlabel_map PARAM_DESCRIPTION, Default: NULL
+#' @param headport_from PARAM_DESCRIPTION, Default: NULL
+#' @param headport_map PARAM_DESCRIPTION, Default: NULL
+#' @param tailtooltip_from PARAM_DESCRIPTION, Default: NULL
+#' @param tailtooltip_map PARAM_DESCRIPTION, Default: NULL
+#' @param tailURL_from PARAM_DESCRIPTION, Default: NULL
+#' @param tailURL_map PARAM_DESCRIPTION, Default: NULL
+#' @param tailclip_from PARAM_DESCRIPTION, Default: NULL
+#' @param tailclip_map PARAM_DESCRIPTION, Default: NULL
+#' @param taillabel_from PARAM_DESCRIPTION, Default: NULL
+#' @param taillabel_map PARAM_DESCRIPTION, Default: NULL
+#' @param tailport_from PARAM_DESCRIPTION, Default: NULL
+#' @param tailport_map PARAM_DESCRIPTION, Default: NULL
+#' @param decorate_from PARAM_DESCRIPTION, Default: NULL
+#' @param decorate_map PARAM_DESCRIPTION, Default: NULL
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[dplyr]{tidyeval-compat}},\code{\link[dplyr]{mutate}},\code{\link[dplyr]{distinct}}
+#' @rdname map_edge_attributes
+#' @export 
+#' @importFrom dplyr enquo mutate distinct
 map_edge_attributes <-
   function(nodes_and_edges,
            fontsize = 12,
@@ -376,6 +518,27 @@ map_edge_attributes <-
 
   }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param nodes_and_edges PARAM_DESCRIPTION
+#' @param attr_theme PARAM_DESCRIPTION, Default: 'lr'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[rlang]{parse_expr}}
+#'  \code{\link[glue]{glue}}
+#'  \code{\link[DiagrammeR]{create_graph}}
+#' @rdname construct_graph
+#' @export 
+#' @importFrom rlang parse_expr
+#' @importFrom glue glue
+#' @importFrom DiagrammeR create_graph
 construct_graph <-
   function(nodes_and_edges,
            attr_theme = "lr") {

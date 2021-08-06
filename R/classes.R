@@ -1,3 +1,8 @@
+#' nodes S4 class
+#' @slot data nodes dataframe
+#' @slot required_fields required fields for a nodes s4 class object
+#' @slot attribute_fields fields denoting node attributes
+
 nodes <-
   setClass(
     Class = "nodes",
@@ -36,6 +41,10 @@ nodes <-
                        )
                      ))
 
+#' edges S4 class
+#' @slot data edges dataframe
+#' @slot required_fields required fields for a edges s4 class object
+#' @slot attribute_fields fields denoting edge attributes
 
 edges <-
 setClass(
@@ -81,6 +90,7 @@ setClass(
                    ))
 )
 
+#' nodes.and.edges S4 class
 
 nodes.and.edges <-
   setClass("nodes.and.edges",
