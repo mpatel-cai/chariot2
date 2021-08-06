@@ -2,7 +2,6 @@ pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  example-graphs: example-graphs.html
   omop-concept-class-graph: omop-concept-class-graph.html
-last_built: 2021-08-06T20:01Z
+last_built: 2021-08-06T20:04Z
 
