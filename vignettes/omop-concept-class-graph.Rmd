@@ -1,0 +1,32 @@
+---
+title: "OMOP Concept Class Graph"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{OMOP Concept Class Graph}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(chariot2)
+library(tidyverse)
+```
+
+```{r}
+nodes_and_edges <-
+  ne_fetch_concept_classes(conn_fun = "pg13::local_connect()")
+nodes_and_edges <-
+  map_node_attributes(nodes_and_edges)
+nodes_and_edges <-
+  map_edge_attributes(nodes_and_edges)
+final_graph <-
+  construct_graph(nodes_and_edges)
+final_graph$graph
+```
