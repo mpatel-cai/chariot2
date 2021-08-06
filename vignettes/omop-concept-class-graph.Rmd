@@ -30,3 +30,200 @@ final_graph <-
   construct_graph(nodes_and_edges)
 final_graph$graph
 ```
+
+```{r}
+library(DiagrammeR)
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(type == "Component") %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(type == "Component") %>%
+  trav_out() %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(type == "Component") %>%
+  trav_in() %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(type == "Component") %>%
+  trav_in() %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(type == "Component") %>%
+  trav_out_edge() %>%
+  trav_out_node(type == "Ingredient")%>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  trav_out_edge() %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  trav_out_edge() %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "RxNorm") %>%
+  trav_out_edge() %>%
+  select_nodes(vocabulary_id == "RxNorm") %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "RxNorm Extension") %>%
+  select_nodes(type == "Ingredient", set_op = "intersect") %>%
+  trav_out_edge() %>%
+  select_nodes(vocabulary_id == "RxNorm Extension") %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "ATC") %>%
+  trav_out_edge() %>%
+  select_nodes(vocabulary_id %in% c("ATC")) %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "ATC") %>%
+  trav_out_until(max_steps = 1) %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "ATC") %>%
+  trav_out_edge() %>%
+  select_nodes(vocabulary_id %in% c("ATC")) %>%
+  trav_out_edge() %>%
+  #select_nodes(vocabulary_id %in% c("RxNorm")) %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  trav_out_edge(rel == "Subsumes") %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  trav_both_edge(is_hierarchical == 0) %>%
+  get_edge_attrs("rel")
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  # select_nodes(type == "Regimen Class", set_op = "intersect") %>%
+  trav_out_until(max_steps = 2) %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  select_nodes(type == "Regimen Class", set_op = "intersect") %>%
+  trav_out() %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  set_node_attrs_ws(node_attr = "fontsize", value = 26) %>%
+  set_node_attrs_ws(node_attr = "width", value = 4) %>%
+  set_node_attrs_ws(node_attr = "height", value = 4) %>%
+  set_edge_attrs(edge_attr = "fontsize", value = 26) %>%
+  set_edge_attrs(edge_attr = "len", value = 35) %>%
+  transform_to_subgraph_ws() %>%
+  render_graph()
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  select_nodes(type == "Regimen Class", set_op = "intersect") %>%
+  trav_out() %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  set_node_attrs_ws(node_attr = "fontsize", value = 4) %>%
+  set_node_attrs_ws(node_attr = "width", value = .5) %>%
+  set_node_attrs_ws(node_attr = "height", value = .5) %>%
+  set_edge_attrs(edge_attr = "fontsize", value = 4) %>%
+  set_edge_attrs(edge_attr = "len", value = .4) %>%
+  transform_to_subgraph_ws() %>%
+  render_graph("circle")
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  select_nodes(type == "Regimen Class", set_op = "intersect") %>%
+  trav_out() %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  set_node_attrs_ws(node_attr = "fontsize", value = 3) %>%
+  set_node_attrs_ws(node_attr = "width", value = .4) %>%
+  set_node_attrs_ws(node_attr = "height", value = .4) %>%
+  set_edge_attrs(edge_attr = "fontsize", value = 3) %>%
+  set_edge_attrs(edge_attr = "len", value = 6) %>%
+  transform_to_subgraph_ws() %>%
+  render_graph("kk")
+```
+
+```{r}
+final_graph$graph %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  select_nodes(type == "Regimen Class", set_op = "intersect") %>%
+  trav_out() %>%
+  select_nodes(vocabulary_id == "HemOnc") %>%
+  set_node_attrs_ws(node_attr = "fontsize", value = 3) %>%
+  set_node_attrs_ws(node_attr = "width", value = .4) %>%
+  set_node_attrs_ws(node_attr = "height", value = .4) %>%
+  set_edge_attrs(edge_attr = "fontsize", value = 3) %>%
+  set_edge_attrs(edge_attr = "len", value = 6) %>%
+  transform_to_subgraph_ws() %>%
+  render_graph("fr")
+```
