@@ -4,6 +4,7 @@ pkgdown_sha: ~
 articles:
   atc-concept-class-graph: atc-concept-class-graph.html
   hemonc-concept-class-graph: hemonc-concept-class-graph.html
+  rescale-graph: rescale-graph.html
   rxnorm-extension-concept-class-graph: rxnorm-extension-concept-class-graph.html
-last_built: 2021-08-06T20:21Z
+last_built: 2021-08-06T20:29Z
 
