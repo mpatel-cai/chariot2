@@ -61,8 +61,14 @@ final_graph$graph %>%
   transform_to_subgraph_ws() 
 
 render_graph(component_graph)
-create_legend(component_graph)
 ```
+
+```{r}
+component_graph_legend <- create_legend(component_graph)
+huxtable::print_html(component_graph_legend[[1]])
+huxtable::print_html(component_graph_legend[[2]])
+```
+
 
 ```{r}
 final_graph$graph %>%
