@@ -22,7 +22,7 @@ library(tidyverse)
 This package creates a properly formatted output from the OMOP 
 Vocabularies for consumption by the DiagrammeR package.  
 
-```{r}
+```{r,results='hide'}
 # Fetch from Postgres  
 nodes_and_edges <-
   ne_fetch_concept_classes(conn_fun = "pg13::local_connect()")
@@ -92,12 +92,5 @@ final_graph$graph %>%
   trav_out_edge(rel == "Subsumes") %>%
   transform_to_subgraph_ws() %>%
   render_graph()
-```
-
-```{r}
-final_graph$graph %>%
-  select_nodes(vocabulary_id == "HemOnc") %>%
-  trav_both_edge(is_hierarchical == 0) %>%
-  get_edge_attrs("rel")
 ```
 
