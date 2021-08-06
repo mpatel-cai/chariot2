@@ -72,9 +72,6 @@ component_graph_legend <- create_legend(component_graph)
 component_graph_legend[[1]]
 ```
 
-```{r}
-component_graph_legend[[2]]
-```
 
 ```{r}
 final_graph$graph %>%
@@ -85,12 +82,21 @@ final_graph$graph %>%
 ```
 
 ```{r}
+hemonc_graph <- 
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   trav_out_edge() %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
+  transform_to_subgraph_ws() 
+
+render_graph(hemonc_graph)
 ```
+
+
+```{r}
+create_legend(hemonc_graph) %>%
+  pluck(1)
+```
+
 
 ```{r}
 final_graph$graph %>%
