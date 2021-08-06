@@ -22,25 +22,19 @@ library(tidyverse)
 This package creates a properly formatted output from the OMOP 
 Vocabularies for consumption by the DiagrammeR package.  
 
-```{r}
+```{r,results='hide'}
 # Fetch from Postgres  
 nodes_and_edges <-
   ne_fetch_concept_classes(conn_fun = "pg13::local_connect()")
-```
 
-```{r}
 # Customize Nodes Attributes  
 nodes_and_edges <-
   map_node_attributes(nodes_and_edges)
-```
 
-```{r}
 # Customize Edge Attributes
 nodes_and_edges <-
   map_edge_attributes(nodes_and_edges)
-```
 
-```{r}
 # Construct Final Graph
 final_graph <-
   construct_graph(nodes_and_edges)
@@ -52,7 +46,7 @@ final_graph$graph
 library(DiagrammeR)
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "RxNorm Extension") %>%
   select_nodes(type == "Ingredient", set_op = "intersect") %>%
