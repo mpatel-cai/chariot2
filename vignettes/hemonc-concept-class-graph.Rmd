@@ -26,21 +26,15 @@ Vocabularies for consumption by the DiagrammeR package.
 # Fetch from Postgres  
 nodes_and_edges <-
   ne_fetch_concept_classes(conn_fun = "pg13::local_connect()")
-```
 
-```{r}
 # Customize Nodes Attributes  
 nodes_and_edges <-
   map_node_attributes(nodes_and_edges)
-```
 
-```{r}
 # Customize Edge Attributes
 nodes_and_edges <-
   map_edge_attributes(nodes_and_edges)
-```
 
-```{r}
 # Construct Final Graph
 final_graph <-
   construct_graph(nodes_and_edges)
@@ -77,15 +71,6 @@ final_graph$graph %>%
 
 ```{r}
 final_graph$graph %>%
-  select_nodes(type == "Component") %>%
-  trav_out_edge() %>%
-  trav_out_node(type == "Ingredient")%>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
-```
-
-```{r}
-final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   trav_out_edge() %>%
   transform_to_subgraph_ws() %>%
@@ -116,12 +101,3 @@ final_graph$graph %>%
   get_edge_attrs("rel")
 ```
 
-```{r}
-final_graph$graph %>%
-  select_nodes(vocabulary_id == "HemOnc") %>%
-  # select_nodes(type == "Regimen Class", set_op = "intersect") %>%
-  trav_out_until(max_steps = 2) %>%
-  select_nodes(vocabulary_id == "HemOnc") %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
-```
