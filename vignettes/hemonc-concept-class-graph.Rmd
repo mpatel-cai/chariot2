@@ -65,10 +65,16 @@ render_graph(component_graph)
 
 ```{r}
 component_graph_legend <- create_legend(component_graph)
-huxtable::print_html(component_graph_legend[[1]])
-huxtable::print_html(component_graph_legend[[2]])
 ```
 
+
+```{r}
+component_graph_legend[[1]]
+```
+
+```{r}
+component_graph_legend[[2]]
+```
 
 ```{r}
 final_graph$graph %>%
