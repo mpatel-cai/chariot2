@@ -1,8 +1,8 @@
 ---
-title: "OMOP Concept Class Graph"
+title: "HemOnc Concept Class Graph"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{OMOP Concept Class Graph}
+  %\VignetteIndexEntry{HemOnc Concept Class Graph}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,17 +19,34 @@ library(chariot2)
 library(tidyverse)
 ```
 
+This package creates a properly formatted output from the OMOP 
+Vocabularies for consumption by the DiagrammeR package.  
+
 ```{r}
+# Fetch from Postgres  
 nodes_and_edges <-
   ne_fetch_concept_classes(conn_fun = "pg13::local_connect()")
+```
+
+```{r}
+# Customize Nodes Attributes  
 nodes_and_edges <-
   map_node_attributes(nodes_and_edges)
+```
+
+```{r}
+# Customize Edge Attributes
 nodes_and_edges <-
   map_edge_attributes(nodes_and_edges)
+```
+
+```{r}
+# Construct Final Graph
 final_graph <-
   construct_graph(nodes_and_edges)
 final_graph$graph
 ```
+
 
 ```{r}
 library(DiagrammeR)
@@ -61,21 +78,13 @@ final_graph$graph %>%
 ```{r}
 final_graph$graph %>%
   select_nodes(type == "Component") %>%
-  trav_in() %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
-```
-
-```{r}
-final_graph$graph %>%
-  select_nodes(type == "Component") %>%
   trav_out_edge() %>%
   trav_out_node(type == "Ingredient")%>%
   transform_to_subgraph_ws() %>%
   render_graph()
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   trav_out_edge() %>%
@@ -83,7 +92,7 @@ final_graph$graph %>%
   render_graph()
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   trav_out_edge() %>%
@@ -92,58 +101,7 @@ final_graph$graph %>%
   render_graph()
 ```
 
-```{r,eval=F}
-final_graph$graph %>%
-  select_nodes(vocabulary_id == "RxNorm") %>%
-  trav_out_edge() %>%
-  select_nodes(vocabulary_id == "RxNorm") %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
-```
-
-
-```{r,eval=F}
-final_graph$graph %>%
-  select_nodes(vocabulary_id == "RxNorm Extension") %>%
-  select_nodes(type == "Ingredient", set_op = "intersect") %>%
-  trav_out_edge() %>%
-  select_nodes(vocabulary_id == "RxNorm Extension") %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
-```
-
-
-```{r,eval=F}
-final_graph$graph %>%
-  select_nodes(vocabulary_id == "ATC") %>%
-  trav_out_edge() %>%
-  select_nodes(vocabulary_id %in% c("ATC")) %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
-```
-
-
-```{r,eval=F}
-final_graph$graph %>%
-  select_nodes(vocabulary_id == "ATC") %>%
-  trav_out_until(max_steps = 1) %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
-```
-
-
-```{r,eval=F}
-final_graph$graph %>%
-  select_nodes(vocabulary_id == "ATC") %>%
-  trav_out_edge() %>%
-  select_nodes(vocabulary_id %in% c("ATC")) %>%
-  trav_out_edge() %>%
-  #select_nodes(vocabulary_id %in% c("RxNorm")) %>%
-  transform_to_subgraph_ws() %>%
-  render_graph()
-```
-
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   trav_out_edge(rel == "Subsumes") %>%
@@ -151,14 +109,14 @@ final_graph$graph %>%
   render_graph()
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   trav_both_edge(is_hierarchical == 0) %>%
   get_edge_attrs("rel")
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   # select_nodes(type == "Regimen Class", set_op = "intersect") %>%
@@ -168,7 +126,7 @@ final_graph$graph %>%
   render_graph()
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   select_nodes(type == "Regimen Class", set_op = "intersect") %>%
@@ -183,7 +141,7 @@ final_graph$graph %>%
   render_graph()
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   select_nodes(type == "Regimen Class", set_op = "intersect") %>%
@@ -198,7 +156,7 @@ final_graph$graph %>%
   render_graph("circle")
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   select_nodes(type == "Regimen Class", set_op = "intersect") %>%
@@ -213,7 +171,7 @@ final_graph$graph %>%
   render_graph("kk")
 ```
 
-```{r,eval=F}
+```{r}
 final_graph$graph %>%
   select_nodes(vocabulary_id == "HemOnc") %>%
   select_nodes(type == "Regimen Class", set_op = "intersect") %>%
