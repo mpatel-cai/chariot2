@@ -97,6 +97,21 @@ nodes.and.edges <-
            list(nodes = "nodes",
                 edges = "edges"))
 
+
+#' raw.omop.data S4 class
+
+omop.data <-
+  setClass("omop.data",
+           list(data = "data.frame"))
+
+#' @importClassesFrom DiagrammeR
+omop.graph <-
+  setClass("omop.graph")
+
+
+
+
+
 setMethod("print",
           signature(x = "nodes"),
           function(x,...) print(x@data,...))

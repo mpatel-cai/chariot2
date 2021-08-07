@@ -85,7 +85,7 @@ load_from_cache <-
            version_key) {
 
       R.cache::loadCache(
-        key = c(sql, version),
+        key = c(sql, version_key),
         dirs = "chariot2")
 
   }
@@ -93,7 +93,7 @@ load_from_cache <-
 
 
 
-fetch_nodes <-
+fetch_omop <-
   function(conn,
            conn_fun = "pg13::local_connect(verbose=FALSE)",
            type_from = concept_class_id,
@@ -129,7 +129,7 @@ fetch_nodes <-
                     version_key = version_key)
 
     }
-
+    Sys.sleep(0.5)
 
     sql <- read_sql_template(file = "total_vocabulary_ct.sql")
     sql <- glue::glue(sql)
@@ -155,7 +155,7 @@ fetch_nodes <-
                     version_key = version_key)
 
     }
-
+    Sys.sleep(0.5)
   ############
     vocabulary_ids <-
       total_vocabulary_ct %>%
@@ -164,11 +164,11 @@ fetch_nodes <-
       unlist() %>%
       unname()
 
-    output <-
+    relationship_output <-
       vector(mode = "list",
              length =
                length(vocabulary_ids))
-    names(output) <- vocabulary_ids
+    names(relationship_output) <- vocabulary_ids
 
     cli::cli_progress_bar(
       format = "\nQuerying {vocabulary_id} | {pb_bar} {pb_current}/{pb_total} {pb_percent} ({pb_elapsed})\n",
@@ -185,7 +185,7 @@ fetch_nodes <-
                         version_key = version_key)
 
       if (is.null(relationship)) {
-
+        Sys.sleep(0.5)
         relationship <-
           pg13::query(
             conn = conn,
@@ -194,17 +194,29 @@ fetch_nodes <-
             sql_statement = sql,
             verbose = verbose,
             render_sql = render_sql)
+        Sys.sleep(0.5)
 
         save_to_cache(resultset = relationship,
                       sql       = sql,
                       version_key = version_key)
 
+      } else {
+
+        Sys.sleep(0.01)
+
       }
 
+      relationship_output[[vocabulary_id]] <-
+        relationship
       cli::cli_progress_update()
 
     }
 
+    relationship_ct_output <-
+      vector(mode = "list",
+             length =
+               length(vocabulary_ids))
+    names(relationship_ct_output) <- vocabulary_ids
 
     for (vocabulary_id in vocabulary_ids) {
 
@@ -217,6 +229,7 @@ fetch_nodes <-
 
       if (is.null(relationship_ct)) {
 
+        Sys.sleep(0.5)
         relationship_ct <-
           pg13::query(
             conn = conn,
@@ -225,16 +238,88 @@ fetch_nodes <-
             sql_statement = sql,
             verbose = verbose,
             render_sql = render_sql)
+        Sys.sleep(0.5)
 
         save_to_cache(resultset = relationship_ct,
                       sql       = sql,
                       version_key = version_key)
 
-      }
+      } else {
 
+        Sys.sleep(0.01)
+
+      }
+      relationship_ct_output[[vocabulary_id]] <-
+        relationship_ct
       cli::cli_progress_update()
 
     }
+
+    omop_relationships <-
+      list(relationships = relationship_output,
+           relationship_counts = relationship_ct_output) %>%
+      purrr::transpose()
+
+
+    omop_relationship_errors <-
+      list()
+
+    # Check to make sure a join will not lead to duplicates
+    for (vocabulary_id in vocabulary_ids) {
+
+      relationship_rows <-
+      omop_relationships[[vocabulary_id]]$relationships %>%
+        dplyr::select(dplyr::any_of(colnames(omop_relationships[[vocabulary_id]]$relationship_counts))) %>%
+        dplyr::distinct() %>%
+        nrow()
+
+      relationship_count_rows <-
+        nrow(omop_relationships[[vocabulary_id]]$relationship_counts)
+
+      if (relationship_rows != relationship_count_rows) {
+
+        omop_relationship_errors[[length(omop_relationship_errors)+1]] <-
+          list(relationship_rows = relationship_rows,
+               relationship_count_rows = relationship_count_rows)
+        names(omop_relationship_errors)[length(omop_relationship_errors)] <-
+          vocabulary_id
+
+      }
+
+
+    }
+
+    if (length(omop_relationship_errors)>0) {
+
+      cli::cli_warn("{length(omop_relationship_errors)} error{?s} in relationship counts found: {names(omop_relationship_errors)}!")
+      return(omop_relationship_errors)
+
+
+    }
+
+    return(total_vocabulary_ct)
+    omop_relationships <-
+    omop_relationships %>%
+      purrr::map(purrr::reduce, dplyr::left_join, by = c("relationship_id", "vocabulary_id_1", "concept_class_id_1", "vocabulary_id_2", "concept_class_id_2")) %>%
+      purrr::map(dplyr::distinct) %>%
+      dplyr::bind_rows() %>%
+      dplyr::left_join(total_vocabulary_ct,
+                       by = c("vocabulary_id_1" = "vocabulary_id")) %>%
+      dplyr::distinct() %>%
+      dplyr::rename(total_vocabulary_ct_1 = total_vocabulary_ct) %>%
+      dplyr::left_join(total_vocabulary_ct,
+                       by = c("vocabulary_id_2" = "vocabulary_id")) %>%
+      dplyr::distinct() %>%
+      dplyr::rename(total_vocabulary_ct_2 = total_vocabulary_ct) %>%
+      dplyr::distinct()
+
+    return(omop_relationships)
+
+    list(total_vocabulary_ct = total_vocabulary_ct,
+         total_concept_class_ct = total_concept_class_ct,
+         relationship_output = relationship_output,
+         relationship_ct_output = relationship_ct_output)
+
   }
 
 
