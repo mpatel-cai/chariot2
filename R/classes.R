@@ -104,9 +104,10 @@ omop.data <-
   setClass("omop.data",
            list(data = "data.frame"))
 
-#' @importClassesFrom DiagrammeR
-omop.graph <-
-  setClass("omop.graph")
+
+# omop.graph <-
+#   setClass("omop.graph",
+#            contains = "dgr_graph")
 
 
 
