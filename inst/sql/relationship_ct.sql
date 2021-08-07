@@ -6,12 +6,16 @@ SELECT DISTINCT
   c2.vocabulary_id AS vocabulary_id_2,
   c2.concept_class_id AS concept_class_id_2,
   COUNT(DISTINCT c2.concept_id) AS concept_count_2
-FROM (SELECT * FROM {schema}.concept WHERE vocabulary_id = '{vocabulary_id}' AND invalid_reason IS NULL) c
-INNER JOIN (SELECT * FROM {schema}.concept_relationship WHERE invalid_reason IS NULL) cr
+FROM {schema}.concept c
+INNER JOIN {schema}.concept_relationship cr
 ON c.concept_id = cr.concept_id_1
-INNER JOIN (SELECT * FROM {schema}.concept WHERE invalid_reason IS NULL) c2
+INNER JOIN {schema}.concept c2
 ON c2.concept_id = cr.concept_id_2
 WHERE
+c.invalid_reason IS NULL AND
+c2.invalid_reason IS NULL AND
+cr.invalid_reason IS NULL AND
+c.vocabulary_id = '{vocabulary_id}' AND
 c.concept_class_id <> c2.concept_class_id
 GROUP BY
   cr.relationship_id,

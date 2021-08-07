@@ -1,15 +1,11 @@
 
-process_sql <-
+read_sql_template <-
   function(file) {
-    sql_template <-
       readLines(
         system.file(package = "chariot2",
                     "sql",
                     file)) %>%
       paste(collapse = "\n")
-
-    list(template = sql_template,
-         sql      = glue::glue(sql_template))
   }
 
 
@@ -45,17 +41,17 @@ get_version_key <-
     #
     # }
 
-    sql <- process_sql(file = "get_version_key.sql")
+    sql_template <- read_sql_template(file = "get_version_key.sql")
 
     if (template_only) {
 
-      return(sql$template)
+      return(sql_template)
 
     }
 
     if (sql_only) {
 
-      return(sql$sql)
+      return(glue::glue(sql_template))
 
     }
 
@@ -63,7 +59,7 @@ get_version_key <-
       pg13::query(conn = conn,
                   conn_fun = conn_fun,
                   checks = "",
-                  sql_statement = sql$sql,
+                  sql_statement = glue::glue(sql_template),
                   verbose = FALSE,
                   render_sql = FALSE)
     as.list(version)
@@ -105,22 +101,12 @@ fetch_nodes <-
            schema = "omop_vocabulary",
            verbose = FALSE,
            render_sql = FALSE,
-           log_schema = "public",
-           log_table = "setup_athena_log",
-           log_timestamp_field = "sa_datetime") {
+           version_key = get_version_key()) {
 
+    stopifnot(!missing(version_key))
 
-    version_key <-
-      get_version_key(
-        conn = conn,
-        conn_fun = conn_fun,
-        log_schema = log_schema,
-        log_table = log_table,
-        log_timestamp_field = log_timestamp_field
-      )
-
-    sql <- process_sql(file = "total_concept_class_ct.sql")
-    sql <- sql$sql
+    sql <- read_sql_template(file = "total_concept_class_ct.sql")
+    sql <- glue::glue(sql)
 
 
     total_concept_class_ct <-
@@ -145,8 +131,8 @@ fetch_nodes <-
     }
 
 
-    sql <- process_sql(file = "total_vocabulary_ct.sql")
-    sql <- sql$sql
+    sql <- read_sql_template(file = "total_vocabulary_ct.sql")
+    sql <- glue::glue(sql)
 
 
     total_vocabulary_ct <-
@@ -173,8 +159,8 @@ fetch_nodes <-
   ############
     vocabulary_ids <-
       total_vocabulary_ct %>%
-      dplyr::arrange(desc(total_vocabulary_ct)) %>%
-      dplyr::select(vocabulary_id) %>%
+      dplyr::arrange(total_vocabulary_ct) %>%
+      dplyr::distinct(vocabulary_id) %>%
       unlist() %>%
       unname()
 
@@ -187,12 +173,12 @@ fetch_nodes <-
     cli::cli_progress_bar(
       format = "\nQuerying {vocabulary_id} | {pb_bar} {pb_current}/{pb_total} {pb_percent} ({pb_elapsed})\n",
       clear = FALSE,
-      total = length(vocabulary_ids))
+      total = 2*length(vocabulary_ids))
 
     for (vocabulary_id in vocabulary_ids) {
 
-      sql <- process_sql(file = "relationship.sql")
-      sql <- sql$sql
+      sql <- read_sql_template(file = "relationship.sql")
+      sql <- glue::glue(sql)
 
       relationship <-
         load_from_cache(sql = sql,
@@ -215,9 +201,15 @@ fetch_nodes <-
 
       }
 
+      cli::cli_progress_update()
 
-      sql <- process_sql(file = "relationship_ct.sql")
-      sql <- sql$sql
+    }
+
+
+    for (vocabulary_id in vocabulary_ids) {
+
+      sql <- read_sql_template(file = "relationship_ct.sql")
+      sql <- glue::glue(sql)
 
       relationship_ct <-
         load_from_cache(sql = sql,
@@ -239,10 +231,6 @@ fetch_nodes <-
                       version_key = version_key)
 
       }
-
-      output[[vocabulary_id]] <-
-        list(relationship = relationship,
-             relationship_ct = relationship_ct)
 
       cli::cli_progress_update()
 
