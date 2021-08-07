@@ -25,7 +25,7 @@ Vocabularies for consumption by the DiagrammeR package.
 ```{r,results='hide'}
 # Fetch from Postgres  
 nodes_and_edges <-
-  ne_fetch_concept_classes(conn_fun = "pg13::local_connect()")
+  fetch_concept_classes()
 
 # Customize Nodes Attributes  
 nodes_and_edges <-
