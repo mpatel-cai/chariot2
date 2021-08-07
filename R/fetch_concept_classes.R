@@ -1,3 +1,27 @@
+
+
+
+
+version_key <-
+  function(log_schema = "public",
+           log_table = "setup_athena_log",
+           log_timestamp_field = "sa_datetime") {
+
+
+    version <-
+      pg13::query(conn = conn,
+                  conn_fun = conn_fun,
+                  checks = "",
+                  sql_statement = sql_statement,
+                  verbose = FALSE,
+                  render_sql = FALSE)
+    as.list(version)
+  }
+
+
+
+
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 #' @param conn PARAM_DESCRIPTION
@@ -18,7 +42,7 @@
 #'  \code{\link[cli]{cli_progress_bar}}
 #'  \code{\link[tidyr]{extract}}
 #'  \code{\link[glue]{glue}}
-#' @rdname fetch_concept_classes
+#' @rdname fetch_concept_classes2
 #' @export
 #' @importFrom pg13 query
 #' @importFrom R.cache loadCache saveCache
@@ -29,7 +53,7 @@
 #' @import tibble
 #' @import stringr
 
-fetch_concept_classes <-
+fetch_concept_classes2 <-
   function(conn,
            conn_fun = "pg13::local_connect(verbose=FALSE)",
            type_from = concept_class_id,
@@ -38,6 +62,7 @@ fetch_concept_classes <-
            verbose = FALSE,
            render_sql = FALSE) {
 
+    .Deprecated()
     sql_statement <-
       c(
       "SELECT * ",
