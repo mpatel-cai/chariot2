@@ -1,4 +1,17 @@
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param file PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname read_sql_template
+#' @export
 read_sql_template <-
   function(file) {
       readLines(
@@ -10,6 +23,30 @@ read_sql_template <-
 
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param conn PARAM_DESCRIPTION
+#' @param conn_fun PARAM_DESCRIPTION, Default: 'pg13::local_connect(verbose=FALSE)'
+#' @param log_schema PARAM_DESCRIPTION, Default: 'public'
+#' @param log_table PARAM_DESCRIPTION, Default: 'setup_athena_log'
+#' @param log_timestamp_field PARAM_DESCRIPTION, Default: 'sa_datetime'
+#' @param template_only PARAM_DESCRIPTION, Default: FALSE
+#' @param sql_only PARAM_DESCRIPTION, Default: FALSE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[glue]{glue}}
+#'  \code{\link[pg13]{query}}
+#' @rdname get_version_key
+#' @export
+#' @importFrom glue glue
+#' @importFrom pg13 query
 get_version_key <-
   function(conn,
            conn_fun = "pg13::local_connect(verbose=FALSE)",
@@ -46,6 +83,24 @@ get_version_key <-
   }
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param resultset PARAM_DESCRIPTION
+#' @param sql PARAM_DESCRIPTION
+#' @param version_key PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[R.cache]{saveCache}}
+#' @rdname save_to_cache
+#' @export
+#' @importFrom R.cache saveCache
 save_to_cache <-
   function(
     resultset,
@@ -59,6 +114,23 @@ save_to_cache <-
     )
   }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param sql PARAM_DESCRIPTION
+#' @param version_key PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[R.cache]{loadCache}}
+#' @rdname load_from_cache
+#' @export
+#' @importFrom R.cache loadCache
 load_from_cache <-
   function(sql,
            version_key) {
@@ -69,6 +141,36 @@ load_from_cache <-
 
   }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param conn PARAM_DESCRIPTION
+#' @param conn_fun PARAM_DESCRIPTION, Default: 'pg13::local_connect(verbose=FALSE)'
+#' @param type_from PARAM_DESCRIPTION, Default: concept_class_id
+#' @param schema PARAM_DESCRIPTION, Default: 'omop_vocabulary'
+#' @param verbose PARAM_DESCRIPTION, Default: FALSE
+#' @param render_sql PARAM_DESCRIPTION, Default: FALSE
+#' @param version_key PARAM_DESCRIPTION, Default: get_version_key()
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[glue]{glue}}
+#'  \code{\link[pg13]{query}}
+#'  \code{\link[dplyr]{arrange}},\code{\link[dplyr]{distinct}},\code{\link[dplyr]{select}},\code{\link[dplyr]{reexports}},\code{\link[dplyr]{mutate-joins}},\code{\link[dplyr]{bind}},\code{\link[dplyr]{rename}}
+#'  \code{\link[cli]{cli_progress_bar}},\code{\link[cli]{cli_abort}}
+#'  \code{\link[purrr]{transpose}},\code{\link[purrr]{map}},\code{\link[purrr]{reduce}}
+#' @rdname fetch_omop
+#' @export
+#' @importFrom glue glue
+#' @importFrom pg13 query
+#' @importFrom dplyr arrange distinct select any_of left_join bind_rows rename
+#' @importFrom cli cli_progress_bar cli_progress_update cli_warn
+#' @importFrom purrr transpose map reduce
 fetch_omop <-
   function(conn,
            conn_fun = "pg13::local_connect(verbose=FALSE)",
@@ -357,6 +459,31 @@ fetch_omop <-
 
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param omop_relationships PARAM_DESCRIPTION
+#' @param type_from PARAM_DESCRIPTION, Default: concept_class_id
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[dplyr]{tidyeval-compat}},\code{\link[dplyr]{bind}},\code{\link[dplyr]{select}},\code{\link[dplyr]{select_all}},\code{\link[dplyr]{distinct}},\code{\link[dplyr]{mutate}},\code{\link[dplyr]{reexports}},\code{\link[dplyr]{vars}},\code{\link[dplyr]{mutate-joins}},\code{\link[dplyr]{rename}}
+#'  \code{\link[stringr]{str_remove}}
+#'  \code{\link[tibble]{rownames}}
+#'  \code{\link[glue]{glue}}
+#'  \code{\link[cli]{cli_abort}}
+#' @rdname create_nodes_and_edges
+#' @export
+#' @importFrom dplyr enquo bind_rows select rename_all distinct mutate bind_cols ends_with rename_at vars left_join rename
+#' @importFrom stringr str_remove_all
+#' @importFrom tibble rowid_to_column
+#' @importFrom glue glue
+#' @importFrom cli cli_warn
 create_nodes_and_edges <-
   function(omop_relationships,
            type_from = concept_class_id,
@@ -414,7 +541,13 @@ create_nodes_and_edges <-
                          dplyr::rename_at(dplyr::vars(!to),
                                           ~paste0(., "_2")),
                        by = c("label_2", "domain_id_2", "vocabulary_id_2", "concept_class_id_2", "standard_concept_2", "concept_count_2", "total_concept_class_ct_2", "total_vocabulary_ct_2")) %>%
-      dplyr::distinct()
+      dplyr::distinct() %>%
+      mutate(concept_1_coverage_frac = glue::glue("{concept_count_1}/{total_concept_class_ct_1}"),
+             concept_2_coverage_frac = glue::glue("{concept_count_2}/{total_concept_class_ct_2}")) %>%
+      mutate(tailtooltip = map(concept_1_coverage_frac, function(x) scales::percent(eval(rlang::parse_expr(x))))) %>%
+      mutate(headtooltip = map(concept_2_coverage_frac, function(x) scales::percent(eval(rlang::parse_expr(x))))) %>%
+      mutate(tailtooltip = unlist(tailtooltip)) %>%
+      mutate(headtooltip = unlist(headtooltip))
 
 
     if (nrow(ccr_df) != nrow(omop_edge)) {

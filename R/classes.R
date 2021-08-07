@@ -100,8 +100,8 @@ nodes.and.edges <-
 
 #' raw.omop.data S4 class
 
-omop.data <-
-  setClass("omop.data",
+omop.relationships <-
+  setClass("omop.relationships",
            list(data = "data.frame"))
 
 
