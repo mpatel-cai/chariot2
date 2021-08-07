@@ -1,25 +1,313 @@
 
+process_sql <-
+  function(file) {
+    sql_template <-
+      readLines(
+        system.file(package = "chariot2",
+                    "sql",
+                    file)) %>%
+      paste(collapse = "\n")
+
+    list(template = sql_template,
+         sql      = glue::glue(sql_template))
+  }
 
 
 
-version_key <-
-  function(log_schema = "public",
+get_version_key <-
+  function(conn,
+           conn_fun = "pg13::local_connect(verbose=FALSE)",
+           log_schema = "public",
            log_table = "setup_athena_log",
-           log_timestamp_field = "sa_datetime") {
+           log_timestamp_field = "sa_datetime",
+           template_only = FALSE,
+           sql_only = FALSE) {
 
+
+    # sql_template <-
+    # readLines(
+    #   system.file(package = "chariot2",
+    #               "sql",
+    #               "version.sql")) %>%
+    #   paste(collapse = "\n")
+    #
+    # if (template_only) {
+    #
+    #   return(sql_template)
+    #
+    # }
+    #
+    # sql <- glue::glue(sql_template)
+    #
+    # if (sql_only) {
+    #
+    #   return(sql)
+    #
+    # }
+
+    sql <- process_sql(file = "get_version_key.sql")
+
+    if (template_only) {
+
+      return(sql$template)
+
+    }
+
+    if (sql_only) {
+
+      return(sql$sql)
+
+    }
 
     version <-
       pg13::query(conn = conn,
                   conn_fun = conn_fun,
                   checks = "",
-                  sql_statement = sql_statement,
+                  sql_statement = sql$sql,
                   verbose = FALSE,
                   render_sql = FALSE)
     as.list(version)
+
+  }
+
+
+save_to_cache <-
+  function(
+    resultset,
+    sql,
+    version_key) {
+
+    R.cache::saveCache(
+      object = resultset,
+      key    = c(sql, version_key),
+      dirs   = "chariot2"
+    )
+  }
+
+load_from_cache <-
+  function(sql,
+           version_key) {
+
+      R.cache::loadCache(
+        key = c(sql, version),
+        dirs = "chariot2")
+
   }
 
 
 
+
+fetch_nodes <-
+  function(conn,
+           conn_fun = "pg13::local_connect(verbose=FALSE)",
+           type_from = concept_class_id,
+           label_glue = "{vocabulary_id}\n{concept_class_id}\n({standard_concept})\n",
+           schema = "omop_vocabulary",
+           verbose = FALSE,
+           render_sql = FALSE,
+           log_schema = "public",
+           log_table = "setup_athena_log",
+           log_timestamp_field = "sa_datetime") {
+
+
+    version_key <-
+      get_version_key(
+        conn = conn,
+        conn_fun = conn_fun,
+        log_schema = log_schema,
+        log_table = log_table,
+        log_timestamp_field = log_timestamp_field
+      )
+
+    sql <- process_sql(file = "total_concept_class_ct.sql")
+    sql <- sql$sql
+
+
+    total_concept_class_ct <-
+      load_from_cache(sql = sql,
+                      version_key = version_key)
+
+    if (is.null(total_concept_class_ct)) {
+
+      total_concept_class_ct <-
+        pg13::query(
+          conn = conn,
+          checks = "",
+          conn_fun = conn_fun,
+          sql_statement = sql,
+          verbose = verbose,
+          render_sql = render_sql)
+
+      save_to_cache(resultset = total_concept_class_ct,
+                    sql       = sql,
+                    version_key = version_key)
+
+    }
+
+
+    sql <- process_sql(file = "total_vocabulary_ct.sql")
+    sql <- sql$sql
+
+
+    total_vocabulary_ct <-
+      load_from_cache(sql = sql,
+                      version_key = version_key)
+
+    if (is.null(total_vocabulary_ct)) {
+
+      total_vocabulary_ct <-
+        pg13::query(
+          conn = conn,
+          checks = "",
+          conn_fun = conn_fun,
+          sql_statement = sql,
+          verbose = verbose,
+          render_sql = render_sql)
+
+      save_to_cache(resultset = total_vocabulary_ct,
+                    sql       = sql,
+                    version_key = version_key)
+
+    }
+
+  ############
+    vocabulary_ids <-
+      total_vocabulary_ct %>%
+      dplyr::arrange(desc(total_vocabulary_ct)) %>%
+      dplyr::select(vocabulary_id) %>%
+      unlist() %>%
+      unname()
+
+    output <-
+      vector(mode = "list",
+             length =
+               length(vocabulary_ids))
+    names(output) <- vocabulary_ids
+
+    cli::cli_progress_bar(
+      format = "\nQuerying {vocabulary_id} | {pb_bar} {pb_current}/{pb_total} {pb_percent} ({pb_elapsed})\n",
+      clear = FALSE,
+      total = length(vocabulary_ids))
+
+    for (vocabulary_id in vocabulary_ids) {
+
+      sql <- process_sql(file = "relationship.sql")
+      sql <- sql$sql
+
+      relationship <-
+        load_from_cache(sql = sql,
+                        version_key = version_key)
+
+      if (is.null(relationship)) {
+
+        relationship <-
+          pg13::query(
+            conn = conn,
+            checks = "",
+            conn_fun = conn_fun,
+            sql_statement = sql,
+            verbose = verbose,
+            render_sql = render_sql)
+
+        save_to_cache(resultset = relationship,
+                      sql       = sql,
+                      version_key = version_key)
+
+      }
+
+
+      sql <- process_sql(file = "relationship_ct.sql")
+      sql <- sql$sql
+
+      relationship_ct <-
+        load_from_cache(sql = sql,
+                        version_key = version_key)
+
+      if (is.null(relationship_ct)) {
+
+        relationship_ct <-
+          pg13::query(
+            conn = conn,
+            checks = "",
+            conn_fun = conn_fun,
+            sql_statement = sql,
+            verbose = verbose,
+            render_sql = render_sql)
+
+        save_to_cache(resultset = relationship_ct,
+                      sql       = sql,
+                      version_key = version_key)
+
+      }
+
+      output[[vocabulary_id]] <-
+        list(relationship = relationship,
+             relationship_ct = relationship_ct)
+
+      cli::cli_progress_update()
+
+    }
+  }
+
+
+
+
+create_nodes_and_edges <-
+  function(data) {
+    type_from <- dplyr::enquo(type_from)
+
+    omop_node <-
+      dplyr::bind_rows(
+        ccr_df %>%
+          dplyr::select(ends_with("_1")) %>%
+          dplyr::rename_all(stringr::str_remove_all, "_1"),
+        ccr_df %>%
+          dplyr::select(ends_with("_2")) %>%
+          dplyr::rename_all(stringr::str_remove_all, "_2")) %>%
+      dplyr::distinct() %>%
+      tibble::rowid_to_column("id") %>%
+      dplyr::mutate(type = !!type_from) %>%
+      dplyr::mutate(label = glue::glue(label_glue)) %>%
+      dplyr::left_join(ccr_ct_df,
+                       by = c("vocabulary_id",
+                              "concept_class_id"))
+
+    omop_edge <-
+      dplyr::bind_cols(
+        ccr_df %>%
+          dplyr::select(dplyr::ends_with("_1")) %>%
+          dplyr::rename_at(dplyr::vars(dplyr::ends_with("_1")),
+                           stringr::str_remove_all, "_1") %>%
+          dplyr::mutate(label_1 = glue::glue(label_glue)) %>%
+          dplyr::select(label_1),
+        ccr_df %>%
+          dplyr::select(dplyr::ends_with("_2")) %>%
+          dplyr::rename_at(dplyr::vars(dplyr::ends_with("_2")),
+                           stringr::str_remove_all, "_2") %>%
+          dplyr::mutate(label_2 = glue::glue(label_glue)) %>%
+          dplyr::select(label_2),
+        ccr_df) %>%
+      dplyr::left_join(omop_node %>%
+                         dplyr::select(from = id, label),
+                       by = c("label_1" = "label")) %>%
+      dplyr::left_join(omop_node %>%
+                         dplyr::select(to = id, label),
+                       by = c("label_2" = "label"))
+
+    omopNode <-
+      new("nodes",
+          data = omop_node)
+
+    omopEdge <-
+      new("edges",
+          data = omop_edge)
+    new("nodes.and.edges",
+        nodes = omopNode,
+        edges = omopEdge)
+    # list(node = omop_node,
+    #      edge = omop_edge)
+
+    }
 
 
 #' @title FUNCTION_TITLE
