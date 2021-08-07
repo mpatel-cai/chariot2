@@ -26,6 +26,12 @@ Vocabularies for consumption by the DiagrammeR package.
 # Fetch from Postgres  
 nodes_and_edges <-
   fetch_concept_classes()
+```
+
+```{r}
+# Add Tooltip 
+nodes_and_edges <- 
+  add_tooltip(nodes_and_edges = nodes_and_edges)
 
 # Customize Nodes Attributes  
 nodes_and_edges <-
@@ -34,6 +40,7 @@ nodes_and_edges <-
 # Customize Edge Attributes
 nodes_and_edges <-
   map_edge_attributes(nodes_and_edges)
+
 
 # Construct Final Graph
 final_graph <-
@@ -62,12 +69,13 @@ final_graph$graph %>%
   transform_to_subgraph_ws() 
 
 render_graph(component_graph,
-             width = 1500,
-             height = 1500)
+             width = 1000,
+             height = 1000)
 ```
 
 ```{r}
-component_graph_legend <- create_legend(component_graph)
+component_graph_legend <- 
+  create_legend(component_graph)
 ```
 
 

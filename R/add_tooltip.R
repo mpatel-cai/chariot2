@@ -1,5 +1,25 @@
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param nodes_and_edges PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[dplyr]{mutate-joins}},\code{\link[dplyr]{select}},\code{\link[dplyr]{reexports}},\code{\link[dplyr]{group_by}},\code{\link[dplyr]{summarise}},\code{\link[dplyr]{distinct}},\code{\link[dplyr]{mutate_all}}
+#'  \code{\link[tidyr]{pivot_longer}},\code{\link[tidyr]{unite}}
+#'  \code{\link[tibble]{rownames}}
+#' @rdname add_tooltip
+#' @export
+#' @importFrom dplyr left_join select any_of group_by summarize ungroup distinct mutate_all
+#' @importFrom tidyr pivot_longer unite
+#' @importFrom tibble rowid_to_column
 add_tooltip <-
   function(nodes_and_edges) {
     nodes_and_edges@nodes@data <-
@@ -34,6 +54,7 @@ add_tooltip <-
                 'fixedsize',
                 'labelloc',
                 'margin'))) %>%
+      dplyr::mutate_at(dplyr::vars(!id), as.character) %>%
       tidyr::pivot_longer(cols = !id) %>%
       tidyr::unite(col = tooltip_row,
                    name,
@@ -140,6 +161,7 @@ add_tooltip <-
             'tailport',
             'decorate'))) %>%
       dplyr::select(
+        label,
         relationship_id,
         relationship_name,
         relationship_source,

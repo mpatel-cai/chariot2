@@ -39,8 +39,6 @@ map_node_attributes(
   y_map = NULL,
   group_from = NULL,
   group_map = NULL,
-  tooltip_from = NULL,
-  tooltip_map = NULL,
   xlabel_from = NULL,
   xlabel_map = NULL,
   URL_from = NULL,
@@ -132,10 +130,6 @@ map_node_attributes(
 
 \item{group_map}{PARAM_DESCRIPTION, Default: NULL}
 
-\item{tooltip_from}{PARAM_DESCRIPTION, Default: NULL}
-
-\item{tooltip_map}{PARAM_DESCRIPTION, Default: NULL}
-
 \item{xlabel_from}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{xlabel_map}{PARAM_DESCRIPTION, Default: NULL}
@@ -175,6 +169,10 @@ map_node_attributes(
 \item{margin_from}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{margin_map}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{tooltip_from}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{tooltip_map}{PARAM_DESCRIPTION, Default: NULL}
 }
 \value{
 OUTPUT_DESCRIPTION

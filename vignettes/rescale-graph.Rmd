@@ -24,18 +24,18 @@ library(tidyverse)
 nodes_and_edges <-
   fetch_concept_classes()
 
-# Customize Nodes Attributes  
-nodes_and_edges <-
-  map_node_attributes(nodes_and_edges)
-
-# Customize Edge Attributes
-nodes_and_edges <-
-  map_edge_attributes(nodes_and_edges)
-
-# Construct Final Graph
+# # Customize Nodes Attributes  
+# nodes_and_edges <-
+#   map_node_attributes(nodes_and_edges)
+# 
+# # Customize Edge Attributes
+# nodes_and_edges <-
+#   map_edge_attributes(nodes_and_edges)
+# 
+# # Construct Final Graph
 final_graph <-
   construct_graph(nodes_and_edges)
-final_graph$graph
+#final_graph$graph
 ```
 
 

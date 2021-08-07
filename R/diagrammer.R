@@ -116,8 +116,6 @@ map_node_attributes <-
            y_map = NULL,
            group_from = NULL,
            group_map = NULL,
-           tooltip_from = NULL,
-           tooltip_map = NULL,
            xlabel_from = NULL,
            xlabel_map = NULL,
            URL_from = NULL,
@@ -250,15 +248,6 @@ map_node_attributes <-
         dplyr::mutate(group = map_to_value(!!group_from,
                                     map_assignment = group_map,
                                     other = group_map_other))
-    }
-
-    if (!is.null(all_args$tooltip_from)) {
-      tooltip_from <- dplyr::enquo(tooltip_from)
-      nodes_and_edges@nodes@data <-
-        nodes_and_edges@nodes@data %>%
-        dplyr::mutate(tooltip = map_to_value(!!tooltip_from,
-                                      map_assignment = tooltip_map,
-                                      other = tooltip_map_other))
     }
 
     if (!is.null(all_args$xlabel_from)) {

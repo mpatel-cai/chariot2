@@ -54,13 +54,42 @@ fetch_concept_classes <-
                   render_sql = FALSE)
     version <- as.list(version)
 
-    ccr_df <-
+    ccr_ct_df <-
       R.cache::loadCache(
-        key = c("ccr_df", version),
+        key = c("ccr_ct_df", version),
         dirs = "chariot2"
       )
 
-    if (is.null(ccr_df)) {
+    if (is.null(ccr_ct_df)) {
+      sql <-
+        as.character(
+          glue::glue(
+            "SELECT ",
+            "  vocabulary_id,",
+            "  concept_class_id,",
+            "  COUNT(DISTINCT concept_id) AS total_concept_class_ct",
+            "FROM {schema}.concept c",
+            "GROUP BY vocabulary_id, concept_class_id;",
+            .sep = "\n"
+          )
+        )
+      ccr_ct_df <-
+        pg13::query(
+          conn = conn,
+          checks = "",
+          conn_fun = conn_fun,
+          sql_statement = sql,
+          verbose = verbose,
+          render_sql = render_sql)
+
+      R.cache::saveCache(
+        object = ccr_ct_df,
+        key    = c("ccr_ct_df", version),
+        dirs   = "chariot2"
+      )
+
+    }
+
 
       vocabulary_ids <-
         pg13::query(conn = conn,
@@ -73,7 +102,7 @@ fetch_concept_classes <-
                         "  COUNT(*) ",
                         "FROM {schema}.concept ",
                         "GROUP BY vocabulary_id ",
-                        "ORDER BY COUNT(*)",
+                        "ORDER BY COUNT(*) DESC",
                         .sep = "\n"),
                     verbose = FALSE,
                     render_sql = FALSE) %>%
@@ -88,8 +117,7 @@ fetch_concept_classes <-
       names(output) <-
         vocabulary_ids
 
-      cli::cli_progress_bar(
-        format = "\nQuerying {vocabulary_id} | {pb_bar} {pb_current}/{pb_total} {pb_percent} ({pb_elapsed})\n",
+      cli::cli_progress_bar(format = "\nQuerying {vocabulary_id} | {pb_bar} {pb_current}/{pb_total} {pb_percent} ({pb_elapsed})\n",
         clear = FALSE,
         total = length(vocabulary_ids))
 
@@ -152,8 +180,131 @@ fetch_concept_classes <-
 
         }
 
+        sql2 <-
+          as.character(
+            glue(
+              "SELECT ",
+              "  cr.relationship_id,",
+              "  c.vocabulary_id AS vocabulary_id_1,",
+              "  c.concept_class_id AS concept_class_id_1,",
+              "  c2.vocabulary_id AS vocabulary_id_2,",
+              "  c2.concept_class_id AS concept_class_id_2,",
+              "  COUNT(DISTINCT c.concept_id) AS count_1 ",
+              "FROM omop_vocabulary.concept_relationship cr ",
+              "INNER JOIN omop_vocabulary.concept c ",
+              "ON c.concept_id = cr.concept_id_1 ",
+              "INNER JOIN omop_vocabulary.concept c2 ",
+              "ON c2.concept_id = cr.concept_id_2 ",
+              "WHERE ",
+              "c.vocabulary_id = '{vocabulary_id}' AND ",
+              "c.concept_class_id <> c2.concept_class_id AND ",
+              "cr.invalid_reason IS NULL AND ",
+              "c.invalid_reason IS NULL AND ",
+              "c2.invalid_reason IS NULL",
+              "GROUP BY ",
+              "  cr.relationship_id, ",
+              "  c.vocabulary_id, ",
+              "  c.concept_class_id, ",
+              "  c2.vocabulary_id, ",
+              "  c2.concept_class_id ",
+              .sep = "\n"
+            ))
+
+
+        # vocabulary_id_data2 <-
+        #   R.cache::loadCache(
+        #     key = c(sql2, version),
+        #     dirs = "chariot2"
+        #   )
+        #
+        #
+        # if (is.null(vocabulary_id_data2)) {
+
+          vocabulary_id_data2 <-
+            pg13::query(
+              conn = conn,
+              checks = "",
+              conn_fun = conn_fun,
+              sql_statement = sql2,
+              verbose = verbose,
+              render_sql = render_sql)
+
+          R.cache::saveCache(
+            object = vocabulary_id_data2,
+            key    = c(sql2, version),
+            dirs   = "chariot2"
+          )
+
+        # }
+
+        sql3 <-
+          as.character(
+            glue(
+              "SELECT ",
+              "  cr.relationship_id,",
+              "  c.vocabulary_id AS vocabulary_id_1,",
+              "  c.concept_class_id AS concept_class_id_1,",
+              "  c2.vocabulary_id AS vocabulary_id_2,",
+              "  c2.concept_class_id AS concept_class_id_2,",
+              "  COUNT(DISTINCT c2.concept_id) AS count_2 ",
+              "FROM omop_vocabulary.concept_relationship cr ",
+              "INNER JOIN omop_vocabulary.concept c ",
+              "ON c.concept_id = cr.concept_id_1 ",
+              "INNER JOIN omop_vocabulary.concept c2 ",
+              "ON c2.concept_id = cr.concept_id_2 ",
+              "WHERE ",
+              "c.vocabulary_id = '{vocabulary_id}' AND ",
+              "c.concept_class_id <> c2.concept_class_id AND ",
+              "cr.invalid_reason IS NULL AND ",
+              "c.invalid_reason IS NULL AND ",
+              "c2.invalid_reason IS NULL",
+              "GROUP BY ",
+              "  cr.relationship_id, ",
+              "  c.vocabulary_id, ",
+              "  c.concept_class_id, ",
+              "  c2.vocabulary_id, ",
+              "  c2.concept_class_id ",
+              .sep = "\n"
+            ))
+
+
+        vocabulary_id_data3 <-
+          R.cache::loadCache(
+            key = c(sql3, version),
+            dirs = "chariot2"
+          )
+
+        if (is.null(vocabulary_id_data3)) {
+
+          vocabulary_id_data3 <-
+            pg13::query(
+              conn = conn,
+              checks = "",
+              conn_fun = conn_fun,
+              sql_statement = sql3,
+              verbose = verbose,
+              render_sql = render_sql)
+
+          R.cache::saveCache(
+            object = vocabulary_id_data3,
+            key    = c(sql3, version),
+            dirs   = "chariot2"
+          )
+
+        }
+
+        vocabulary_id_count <-
+          dplyr::inner_join(
+            vocabulary_id_data2,
+            vocabulary_id_data3,
+            by = c("relationship_id", "vocabulary_id_1", "concept_class_id_1", "vocabulary_id_2", "concept_class_id_2"))
+
+
         output[[vocabulary_id]] <-
-          vocabulary_id_data
+          vocabulary_id_data %>%
+          left_join(vocabulary_id_count,
+                    by = c("relationship_id", "vocabulary_id_1", "concept_class_id_1", "vocabulary_id_2", "concept_class_id_2")) %>%
+          dplyr::distinct()
 
         cli::cli_progress_update()
 
@@ -162,15 +313,13 @@ fetch_concept_classes <-
 
       ccr_df <-
         dplyr::bind_rows(output) %>%
+        dplyr::distinct() %>%
         tidyr::extract(col = relationship_name,
                        into = "relationship_source",
                        regex = "^.*[(]{1}(.*?)[)]{1}",
                        remove = FALSE)
 
-      R.cache::saveCache(object = ccr_df,
-                         key = c("ccr_df", version),
-                         dirs = "chariot2")
-    }
+
 
 
 
@@ -187,7 +336,10 @@ fetch_concept_classes <-
           dplyr::distinct() %>%
           tibble::rowid_to_column("id") %>%
           dplyr::mutate(type = !!type_from) %>%
-          dplyr::mutate(label = glue::glue(label_glue))
+          dplyr::mutate(label = glue::glue(label_glue)) %>%
+          dplyr::left_join(ccr_ct_df,
+                           by = c("vocabulary_id",
+                                  "concept_class_id"))
 
         omop_edge <-
           dplyr::bind_cols(
