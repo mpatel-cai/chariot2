@@ -6,8 +6,8 @@
 \usage{
 map_edge_attributes(
   nodes_and_edges,
-  fontsize = 12,
-  len = 1,
+  fontsize = 26,
+  len = 5,
   label_from = relationship_name,
   style_from = NULL,
   style_map = NULL,

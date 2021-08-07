@@ -6,10 +6,10 @@
 \usage{
 map_node_attributes(
   nodes_and_edges,
-  fontsize = 12,
+  fontsize = 26,
   fontname = NULL,
-  width = 1.5,
-  height = 1.5,
+  width = 4,
+  height = 4,
   shape_from = standard_concept,
   shape_map = c(C = "square", S = "circle", `NA` = "circle"),
   shape_map_other = "circle",

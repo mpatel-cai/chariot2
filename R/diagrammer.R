@@ -58,29 +58,29 @@
 #' @param margin_map PARAM_DESCRIPTION, Default: NULL
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[cli]{cli_alert}}
 #'  \code{\link[dplyr]{tidyeval-compat}},\code{\link[dplyr]{mutate}}
 #'  \code{\link[purrr]{keep}}
 #'  \code{\link[tibble]{as_tibble}}
 #' @rdname map_node_attributes
-#' @export 
+#' @export
 #' @importFrom cli cli_alert_info
 #' @importFrom dplyr enquo mutate
 #' @importFrom purrr keep
 #' @importFrom tibble as_tibble
 map_node_attributes <-
   function(nodes_and_edges,
-           fontsize = 12,
+           fontsize = 26,
            fontname = NULL,
-           width    = 1.5,
-           height   = 1.5,
+           width    = 4,
+           height   = 4,
            shape_from = standard_concept,
            shape_map =   c(C = "square",
                            S = "circle",
@@ -430,21 +430,21 @@ map_node_attributes <-
 #' @param decorate_map PARAM_DESCRIPTION, Default: NULL
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[dplyr]{tidyeval-compat}},\code{\link[dplyr]{mutate}},\code{\link[dplyr]{distinct}}
 #' @rdname map_edge_attributes
-#' @export 
+#' @export
 #' @importFrom dplyr enquo mutate distinct
 map_edge_attributes <-
   function(nodes_and_edges,
-           fontsize = 12,
-           len = 1.0,
+           fontsize = 26,
+           len = 5,
            label_from = relationship_name,
            style_from = NULL,
            style_map = NULL,
@@ -524,18 +524,18 @@ map_edge_attributes <-
 #' @param attr_theme PARAM_DESCRIPTION, Default: 'lr'
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[rlang]{parse_expr}}
 #'  \code{\link[glue]{glue}}
 #'  \code{\link[DiagrammeR]{create_graph}}
 #' @rdname construct_graph
-#' @export 
+#' @export
 #' @importFrom rlang parse_expr
 #' @importFrom glue glue
 #' @importFrom DiagrammeR create_graph
