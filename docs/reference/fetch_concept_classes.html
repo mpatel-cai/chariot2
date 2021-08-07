@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FUNCTION_TITLE — ne_fetch_concept_classes • chariot2</title>
+<title>FUNCTION_TITLE — fetch_concept_classes • chariot2</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="FUNCTION_TITLE — ne_fetch_concept_classes" />
+<meta property="og:title" content="FUNCTION_TITLE — fetch_concept_classes" />
 <meta property="og:description" content="FUNCTION_DESCRIPTION" />
 
 
@@ -130,19 +130,22 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>FUNCTION_TITLE</h1>
-    <small class="dont-index">Source: <a href='https://github.com/mpatel-cai/chariot2/blob/master/R/ne_fetch_concept_classes.R'><code>R/ne_fetch_concept_classes.R</code></a></small>
-    <div class="hidden name"><code>ne_fetch_concept_classes.Rd</code></div>
+    <small class="dont-index">Source: <a href='https://github.com/mpatel-cai/chariot2/blob/master/R/fetch_concept_classes.R'><code>R/fetch_concept_classes.R</code></a></small>
+    <div class="hidden name"><code>fetch_concept_classes.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>FUNCTION_DESCRIPTION</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ne_fetch_concept_classes</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>fetch_concept_classes</span><span class='op'>(</span>
   <span class='va'>conn</span>,
-  <span class='va'>conn_fun</span>,
+  conn_fun <span class='op'>=</span> <span class='st'>"pg13::local_connect(verbose=FALSE)"</span>,
   type_from <span class='op'>=</span> <span class='va'>concept_class_id</span>,
-  label_glue <span class='op'>=</span> <span class='st'>"{vocabulary_id}\n{concept_class_id}\n({standard_concept})\n"</span>
+  label_glue <span class='op'>=</span> <span class='st'>"{vocabulary_id}\n{concept_class_id}\n({standard_concept})\n"</span>,
+  schema <span class='op'>=</span> <span class='st'>"omop_vocabulary"</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  render_sql <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
