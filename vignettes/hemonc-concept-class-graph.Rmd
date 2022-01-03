@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(chariot2)
 library(tidyverse)
+library(cli)
 ```
 
 This package creates a properly formatted output from the OMOP 
@@ -24,11 +25,18 @@ Vocabularies for consumption by the DiagrammeR package.
 
 ```{r,results='hide'}
 # Fetch from Postgres  
-nodes_and_edges <-
-  fetch_concept_classes()
+version_key = get_version_key()
+omop_relationships <-
+  fetch_omop(version_key = version_key)
+omop_relationships@data
 ```
 
+Make nodes and edges and add attributes. 
+
 ```{r}
+nodes_and_edges <- 
+  create_nodes_and_edges(omop_relationships = omop_relationships)
+
 # Add Tooltip 
 nodes_and_edges <- 
   add_tooltip(nodes_and_edges = nodes_and_edges)
@@ -40,12 +48,12 @@ nodes_and_edges <-
 # Customize Edge Attributes
 nodes_and_edges <-
   map_edge_attributes(nodes_and_edges)
+```
 
-
+```{r}
 # Construct Final Graph
 final_graph <-
   construct_graph(nodes_and_edges)
-final_graph$graph
 ```
 
 

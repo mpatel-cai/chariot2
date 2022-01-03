@@ -75,8 +75,7 @@ add_tooltip <-
         nodes_and_edges@edges@data %>%
           dplyr::select(
             !dplyr::any_of(
-              c('label',
-                'rel',
+              c('rel',
                 'style',
                 'penwidth',
                 'color',
@@ -89,7 +88,6 @@ add_tooltip <-
                 'len',
                 'tooltip',
                 'URL',
-                'label',
                 'labelfontname',
                 'labelfontsize',
                 'labelfontcolor',
@@ -110,6 +108,7 @@ add_tooltip <-
                 'tailport',
                 'decorate'))) %>%
           dplyr::select(
+            label,
             relationship_id,
             relationship_name,
             relationship_source,
@@ -126,7 +125,6 @@ add_tooltip <-
         !dplyr::any_of(
           c('label_1',
             'label_2',
-            'label',
             'rel',
             'style',
             'penwidth',
@@ -140,7 +138,6 @@ add_tooltip <-
             'len',
             'tooltip',
             'URL',
-            'label',
             'labelfontname',
             'labelfontsize',
             'labelfontcolor',
@@ -161,7 +158,6 @@ add_tooltip <-
             'tailport',
             'decorate'))) %>%
       dplyr::select(
-        label,
         relationship_id,
         relationship_name,
         relationship_source,

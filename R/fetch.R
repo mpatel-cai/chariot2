@@ -169,7 +169,7 @@ load_from_cache <-
 #' @importFrom glue glue
 #' @importFrom pg13 query
 #' @importFrom dplyr arrange distinct select any_of left_join bind_rows rename
-#' @importFrom cli cli_progress_bar cli_progress_update cli_warn
+#' @import cli
 #' @importFrom purrr transpose map reduce
 fetch_omop <-
   function(conn,
@@ -431,12 +431,20 @@ fetch_omop <-
 
     }
 
+    omop_relationships5 <-
+      omop_relationships4 %>%
+      tidyr::extract(col = "relationship_name",
+                     into = "relationship_source",
+                     remove = FALSE,
+                     regex = "^.*[(]{1}(.*?)[)]{1}")
+
     new("omop.relationships",
         data =
-    omop_relationships4 %>%
+    omop_relationships5 %>%
       dplyr::select(
         relationship_id,
         relationship_name,
+        relationship_source,
         is_hierarchical,
         defines_ancestry,
         domain_id_1,
@@ -487,11 +495,12 @@ fetch_omop <-
 create_nodes_and_edges <-
   function(omop_relationships,
            type_from = concept_class_id,
-           label_glue = "{vocabulary_id}\n{concept_class_id}\n({standard_concept})\n") {
+           label_glue = "{vocabulary_id}\n{concept_class_id}\n({standard_concept})\n",
+           edge_label_from = relationship_name) {
 
 
     ccr_df <- omop_relationships@data
-
+    edge_label_from <- dplyr::enquo(edge_label_from)
     type_from <- dplyr::enquo(type_from)
 
     omop_node <-
@@ -502,6 +511,7 @@ create_nodes_and_edges <-
         ccr_df %>%
           dplyr::select(ends_with("_2")) %>%
           dplyr::rename_all(stringr::str_remove_all, "_2")) %>%
+      dplyr::select(-concept_count) %>%
       dplyr::distinct() %>%
       tibble::rowid_to_column("id") %>%
       dplyr::mutate(type = !!type_from) %>%
@@ -534,20 +544,21 @@ create_nodes_and_edges <-
                          dplyr::rename(from = id) %>%
                          dplyr::rename_at(dplyr::vars(!from),
                                           ~paste0(., "_1")),
-                       by = c("label_1", "domain_id_1", "vocabulary_id_1", "concept_class_id_1", "standard_concept_1", "concept_count_1", "total_concept_class_ct_1", "total_vocabulary_ct_1")) %>%
+                       by = c("label_1", "domain_id_1", "vocabulary_id_1", "concept_class_id_1", "standard_concept_1", "total_concept_class_ct_1", "total_vocabulary_ct_1")) %>%
       dplyr::distinct() %>%
       dplyr::left_join(omop_node %>%
                          dplyr::rename(to = id) %>%
                          dplyr::rename_at(dplyr::vars(!to),
                                           ~paste0(., "_2")),
-                       by = c("label_2", "domain_id_2", "vocabulary_id_2", "concept_class_id_2", "standard_concept_2", "concept_count_2", "total_concept_class_ct_2", "total_vocabulary_ct_2")) %>%
+                       by = c("label_2", "domain_id_2", "vocabulary_id_2", "concept_class_id_2", "standard_concept_2", "total_concept_class_ct_2", "total_vocabulary_ct_2")) %>%
       dplyr::distinct() %>%
       mutate(concept_1_coverage_frac = glue::glue("{concept_count_1}/{total_concept_class_ct_1}"),
              concept_2_coverage_frac = glue::glue("{concept_count_2}/{total_concept_class_ct_2}")) %>%
       mutate(tailtooltip = map(concept_1_coverage_frac, function(x) scales::percent(eval(rlang::parse_expr(x))))) %>%
       mutate(headtooltip = map(concept_2_coverage_frac, function(x) scales::percent(eval(rlang::parse_expr(x))))) %>%
       mutate(tailtooltip = unlist(tailtooltip)) %>%
-      mutate(headtooltip = unlist(headtooltip))
+      mutate(headtooltip = unlist(headtooltip)) %>%
+      mutate(label = !!edge_label_from)
 
 
     if (nrow(ccr_df) != nrow(omop_edge)) {
